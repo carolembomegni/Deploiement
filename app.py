@@ -1,3 +1,4 @@
+
 import os
 import urllib.request
 import cv2
@@ -371,10 +372,6 @@ st.markdown(
     '<div class="footer-note">Application académique de classification binaire d’IRM cérébrale</div>',
     unsafe_allow_html=True
 )
-   
-
-  
-
 
  
   
