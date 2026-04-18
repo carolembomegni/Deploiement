@@ -213,6 +213,7 @@ with st.sidebar:
         step=0.05
     )
     show_details = st.checkbox("Afficher les détails techniques", value=False)
+    show_gradcam = st.checkbox("Afficher Grad-CAM", value=False)
     st.markdown("---")
     st.info(
         "Cet outil est une aide académique à la décision. "
@@ -234,7 +235,7 @@ download_model()
 # =========================
 @st.cache_resource
 def load_model():
-     return tf.keras.models.load_model(
+    return tf.keras.models.load_model(
         MODEL_PATH,
         compile=False
     )
@@ -258,12 +259,19 @@ def apply_clahe_bgr(img_bgr):
 def preprocess_image(image):
     img_rgb = np.array(image.convert("RGB"))
     img_bgr = cv2.cvtColor(img_rgb, cv2.COLOR_RGB2BGR)
+
     img_clahe_bgr = apply_clahe_bgr(img_bgr)
     img_clahe_rgb = cv2.cvtColor(img_clahe_bgr, cv2.COLOR_BGR2RGB)
-    img_resized = cv2.resize(img_clahe_rgb, IMG_SIZE)
-    img_array = img_resized.astype("float32")
+
+    display_img = cv2.resize(img_clahe_rgb, IMG_SIZE)
+
+    img_array = display_img.astype("float32")
+
+    # Le modèle clean exporté ne contient plus preprocess_input intégré
+    img_array = tf.keras.applications.resnet50.preprocess_input(img_array)
+
     img_array = np.expand_dims(img_array, axis=0)
-    return img_array
+    return img_array, display_img
 
 # =========================
 # USER GUIDE
@@ -285,6 +293,69 @@ Le résultat doit toujours être interprété dans un contexte clinique global.
 """)
 
 # =========================
+# GRAD-CAM
+# =========================
+def get_resnet_backbone(model):
+    for layer in model.layers:
+        if isinstance(layer, tf.keras.Model) and "resnet" in layer.name.lower():
+            return layer
+    raise ValueError("Backbone ResNet50 introuvable dans le modèle.")
+
+def make_gradcam_heatmap(img_array, model, last_conv_layer_name="conv5_block3_out"):
+    """
+    img_array : image déjà prétraitée, shape (1, 224, 224, 3)
+    """
+    base_model = get_resnet_backbone(model)
+
+    last_conv_layer_model = tf.keras.Model(
+        inputs=base_model.input,
+        outputs=base_model.get_layer(last_conv_layer_name).output
+    )
+
+    last_conv_shape = base_model.get_layer(last_conv_layer_name).output.shape[1:]
+    classifier_input = tf.keras.Input(shape=last_conv_shape)
+
+    x = classifier_input
+    start = False
+    for layer in model.layers:
+        if layer.name == base_model.name:
+            start = True
+            continue
+        if start:
+            x = layer(x)
+
+    classifier_model = tf.keras.Model(classifier_input, x)
+
+    with tf.GradientTape() as tape:
+        last_conv_output = last_conv_layer_model(img_array)
+        tape.watch(last_conv_output)
+
+        preds = classifier_model(last_conv_output, training=False)
+        class_channel = preds[:, 0]
+
+    grads = tape.gradient(class_channel, last_conv_output)
+    pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
+
+    last_conv_output = last_conv_output[0]
+    heatmap = tf.reduce_sum(last_conv_output * pooled_grads, axis=-1)
+
+    heatmap = tf.maximum(heatmap, 0) / (tf.reduce_max(heatmap) + 1e-8)
+    return heatmap.numpy()
+
+def overlay_gradcam_on_image(display_image_rgb, heatmap, alpha=0.4):
+    h, w = display_image_rgb.shape[:2]
+
+    heatmap_uint8 = np.uint8(255 * heatmap)
+    heatmap_uint8 = cv2.resize(heatmap_uint8, (w, h))
+
+    heatmap_color = cv2.applyColorMap(heatmap_uint8, cv2.COLORMAP_JET)
+    heatmap_color = cv2.cvtColor(heatmap_color, cv2.COLOR_BGR2RGB)
+
+    superimposed = cv2.addWeighted(display_image_rgb, 1 - alpha, heatmap_color, alpha, 0)
+
+    return heatmap_uint8, superimposed
+
+# =========================
 # UPLOADER
 # =========================
 st.markdown('<div class="section-title">Image à analyser</div>', unsafe_allow_html=True)
@@ -301,7 +372,7 @@ if uploaded_file is not None:
     st.image(image, caption="Image IRM chargée", width=380)
     st.markdown('</div>', unsafe_allow_html=True)
 
-    x = preprocess_image(image)
+    x, display_img = preprocess_image(image)
 
     with st.spinner("Analyse en cours..."):
         pred = model.predict(x, verbose=0)
@@ -357,6 +428,30 @@ if uploaded_file is not None:
 
     st.write("")
     st.progress(max(0.0, min(prob, 1.0)))
+
+    if show_gradcam:
+        st.markdown("### Grad-CAM : zone d’intérêt du modèle")
+
+        heatmap = make_gradcam_heatmap(
+            img_array=x,
+            model=model,
+            last_conv_layer_name="conv5_block3_out"
+        )
+
+        heatmap_gray, gradcam_overlay = overlay_gradcam_on_image(display_img, heatmap, alpha=0.4)
+
+        col_gc1, col_gc2 = st.columns(2)
+
+        with col_gc1:
+            st.image(heatmap_gray, caption="Heatmap Grad-CAM", clamp=True)
+
+        with col_gc2:
+            st.image(gradcam_overlay, caption="Superposition sur l’image analysée")
+
+        st.info(
+            "La zone colorée indique les régions qui ont le plus influencé la prédiction du modèle. "
+            "Cette visualisation aide à vérifier si le modèle se concentre sur une zone pertinente."
+        )
 
     if show_details:
         with st.expander("Détails techniques"):
