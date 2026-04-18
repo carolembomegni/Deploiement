@@ -21,53 +21,74 @@ st.set_page_config(
 )
 
 # =========================
-# STYLE - inspiré de La Cité
+# STYLE CSS
 # =========================
 st.markdown("""
 <style>
     .stApp {
-        background: linear-gradient(180deg, #eef4fb 0%, #f8fbff 100%);
+        background: linear-gradient(180deg, #f4fbf6 0%, #edf7ef 100%);
     }
 
     .block-container {
-        max-width: 960px;
-        padding-top: 1.8rem;
+        max-width: 980px;
+        padding-top: 1.5rem;
         padding-bottom: 2rem;
     }
 
     section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #17365d 0%, #244b78 100%);
+        background: linear-gradient(180deg, #1f6f43 0%, #2d8a57 100%);
     }
 
     section[data-testid="stSidebar"] * {
         color: white !important;
     }
 
-    .hero {
-        background: linear-gradient(135deg, #17365d 0%, #244b78 70%, #ef7d57 100%);
-        border-radius: 24px;
-        padding: 28px 30px;
+    .top-banner {
+        background: linear-gradient(135deg, #1f6f43 0%, #3d9b63 65%, #8fca9f 100%);
+        border-radius: 26px;
+        padding: 26px 30px;
         color: white;
-        box-shadow: 0 10px 24px rgba(23, 54, 93, 0.18);
-        margin-bottom: 24px;
+        box-shadow: 0 10px 24px rgba(31, 111, 67, 0.18);
+        margin-bottom: 22px;
     }
 
-    .hero-title {
+    .top-banner-title {
         font-size: 2.2rem;
         font-weight: 800;
-        margin-bottom: 0.35rem;
+        margin-bottom: 0.4rem;
     }
 
-    .hero-subtitle {
+    .top-banner-subtitle {
         font-size: 1.05rem;
         line-height: 1.6;
-        opacity: 0.96;
+        opacity: 0.97;
+    }
+
+    .deploy-banner {
+        background: white;
+        border: 2px solid #d7eadc;
+        border-radius: 22px;
+        padding: 18px 22px;
+        margin-bottom: 20px;
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+    }
+
+    .deploy-banner-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #1f6f43;
+        margin-bottom: 0.2rem;
+    }
+
+    .deploy-banner-text {
+        font-size: 1rem;
+        color: #355e43;
     }
 
     .section-title {
         font-size: 1.15rem;
         font-weight: 700;
-        color: #17365d;
+        color: #1f6f43;
         margin-top: 0.5rem;
         margin-bottom: 0.8rem;
     }
@@ -76,46 +97,47 @@ st.markdown("""
         background: white;
         border-radius: 20px;
         padding: 20px;
-        box-shadow: 0 8px 22px rgba(17, 24, 39, 0.08);
-        margin-top: 12px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+        margin-top: 10px;
         margin-bottom: 18px;
+        border: 1px solid #e4f0e7;
     }
 
     .result-card {
         border-radius: 22px;
         padding: 24px;
-        margin-top: 20px;
+        margin-top: 18px;
         margin-bottom: 18px;
-        box-shadow: 0 10px 22px rgba(0,0,0,0.08);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
     }
 
     .result-danger {
-        background: linear-gradient(135deg, #fff1f2 0%, #ffe3e6 100%);
-        border-left: 10px solid #ef7d57;
+        background: linear-gradient(135deg, #fff3f2 0%, #ffe5e1 100%);
+        border-left: 10px solid #d95c4f;
     }
 
     .result-success {
-        background: linear-gradient(135deg, #ecfdf5 0%, #dcfce7 100%);
-        border-left: 10px solid #10b981;
+        background: linear-gradient(135deg, #effcf3 0%, #ddf6e4 100%);
+        border-left: 10px solid #2f8f57;
     }
 
     .result-title {
         font-size: 1.45rem;
         font-weight: 800;
-        color: #17365d;
+        color: #1e2b20;
         margin-bottom: 10px;
     }
 
     .result-text {
         font-size: 1.06rem;
         line-height: 1.7;
-        color: #1f2937;
+        color: #2c3a2e;
     }
 
     .note {
         margin-top: 10px;
         font-size: 0.94rem;
-        color: #5b6470;
+        color: #617066;
     }
 
     .metric-card {
@@ -123,33 +145,33 @@ st.markdown("""
         border-radius: 18px;
         padding: 18px;
         text-align: center;
-        box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-        border-top: 5px solid #17365d;
+        box-shadow: 0 5px 14px rgba(0,0,0,0.05);
+        border-top: 5px solid #2f8f57;
     }
 
     .metric-label {
         font-size: 0.95rem;
-        color: #6b7280;
+        color: #6a7a6d;
         margin-bottom: 6px;
     }
 
     .metric-value {
         font-size: 1.45rem;
         font-weight: 800;
-        color: #17365d;
+        color: #1f6f43;
     }
 
     .footer-note {
         text-align: center;
-        color: #5b6470;
-        font-size: 0.9rem;
-        margin-top: 26px;
+        color: #66756a;
+        font-size: 0.92rem;
+        margin-top: 28px;
     }
 
     div[data-testid="stFileUploader"] > section {
         background: white;
         border-radius: 18px;
-        border: 2px dashed #c6d4e5;
+        border: 2px dashed #b8d9c0;
         padding: 8px;
     }
 </style>
@@ -159,35 +181,24 @@ st.markdown("""
 # HEADER
 # =========================
 st.markdown("""
-<div class="hero">
-    <div class="hero-title">🧠 Analyse d’image IRM cérébrale</div>
-    <div class="hero-subtitle">
+<div class="top-banner">
+    <div class="top-banner-title">🧠 Analyse d’image IRM cérébrale</div>
+    <div class="top-banner-subtitle">
         Outil d’aide automatisée à l’interprétation d’une image IRM cérébrale.
-        Chargez une image pour obtenir un résultat simple, clair et visuel.
+        Chargez une image pour obtenir un résultat simple, lisible et visuel.
     </div>
 </div>
 """, unsafe_allow_html=True)
 
-with st.expander("📘 Guide d’utilisation"):
-    st.markdown("""
-###  Objectif
-Analyser une image IRM cérébrale pour détecter la présence potentielle d’une tumeur.
+st.markdown("""
+<div class="deploy-banner">
+    <div class="deploy-banner-title">✅ Projet déployé</div>
+    <div class="deploy-banner-text">
+        Projet déployé par les étudiants du Collège La Cité.
+    </div>
+</div>
+""", unsafe_allow_html=True)
 
-###  Étapes
-1. Importer une image IRM  
-2. Attendre l’analyse automatique  
-3. Lire le résultat affiché  
-
-### Résultats
-- ⚠️ Compatible avec une tumeur → attention requise  
-- ✅ Pas de tumeur détectée → résultat rassurant  
-
-###  Paramètre
-Le seuil de décision permet d’ajuster la sensibilité du modèle.
-
-### Important
-Ce système est une aide à la décision et ne remplace pas un médecin.
-""")
 # =========================
 # SIDEBAR
 # =========================
@@ -203,17 +214,20 @@ with st.sidebar:
     show_details = st.checkbox("Afficher les détails techniques", value=False)
     st.markdown("---")
     st.info(
-        "Cet outil est un prototype académique d’aide à la décision. "
+        "Cet outil est une aide académique à la décision. "
         "Il ne remplace pas l’interprétation d’un professionnel de santé."
     )
 
 # =========================
-# MODEL
+# MODEL DOWNLOAD
 # =========================
 if not os.path.exists(MODEL_PATH):
     with st.spinner("Téléchargement du modèle en cours..."):
         gdown.download(MODEL_URL, MODEL_PATH, quiet=False, fuzzy=True)
 
+# =========================
+# LOAD MODEL
+# =========================
 @st.cache_resource
 def load_model():
     return tf.keras.models.load_model(MODEL_PATH)
@@ -245,7 +259,26 @@ def preprocess_image(image):
     return img_array
 
 # =========================
-# UPLOAD
+# USER GUIDE
+# =========================
+with st.expander("📘 Guide d’utilisation"):
+    st.markdown("""
+**Étapes d’utilisation :**
+1. Chargez une image IRM cérébrale au format JPG, JPEG ou PNG.
+2. Attendez quelques secondes pendant l’analyse.
+3. Consultez le résultat affiché par l’application.
+
+**Résultats possibles :**
+- **Image potentiellement compatible avec une tumeur**
+- **Aucune tumeur détectée par le modèle**
+
+**Important :**  
+Ce système est une aide automatique à la décision.  
+Le résultat doit toujours être interprété dans un contexte clinique global.
+""")
+
+# =========================
+# UPLOADER
 # =========================
 st.markdown('<div class="section-title">Image à analyser</div>', unsafe_allow_html=True)
 
@@ -280,7 +313,7 @@ if uploaded_file is not None:
                 Le modèle a détecté des caractéristiques pouvant être associées à une tumeur sur cette image.
             </div>
             <div class="note">
-                Une validation par examen clinique et interprétation radiologique est recommandée.
+                Une validation par interprétation clinique et radiologique est recommandée.
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -292,7 +325,7 @@ if uploaded_file is not None:
                 Le modèle n’a pas identifié d’élément évocateur de tumeur sur cette image.
             </div>
             <div class="note">
-                Ce résultat reste une aide automatisée et doit être interprété dans le contexte clinique global.
+                Ce résultat constitue une aide automatisée et doit être confirmé dans le contexte clinique.
             </div>
         </div>
         """, unsafe_allow_html=True)
@@ -325,6 +358,9 @@ if uploaded_file is not None:
             st.write(f"Seuil utilisé : `{threshold}`")
 
 st.markdown(
-    '<div class="footer-note">Prototype académique — Application de classification binaire d’IRM cérébrale</div>',
+    '<div class="footer-note">Application académique de classification binaire d’IRM cérébrale</div>',
     unsafe_allow_html=True
 )
+
+
+ 
