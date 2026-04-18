@@ -1,4 +1,3 @@
-
 import os
 import urllib.request
 import cv2
@@ -175,6 +174,22 @@ st.markdown("""
         border: 2px dashed #b8d9c0;
         padding: 8px;
     }
+
+    /* Guide d'utilisation plus visible */
+    div[data-testid="stExpander"] {
+        background-color: #FAFAFA;
+        border: 1px solid #E5E7EB;
+        border-radius: 14px;
+        padding: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        margin-bottom: 18px;
+    }
+
+    div[data-testid="stExpander"] summary {
+        font-weight: 700;
+        color: #1f5f3b;
+        font-size: 18px;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -266,11 +281,9 @@ def preprocess_image(image):
     display_img = cv2.resize(img_clahe_rgb, IMG_SIZE)
 
     img_array = display_img.astype("float32")
-
-    # Le modèle clean exporté ne contient plus preprocess_input intégré
     img_array = tf.keras.applications.resnet50.preprocess_input(img_array)
-
     img_array = np.expand_dims(img_array, axis=0)
+
     return img_array, display_img
 
 # =========================
@@ -280,8 +293,10 @@ with st.expander("📘 Guide d’utilisation"):
     st.markdown("""
 **Étapes d’utilisation :**
 1. Chargez une image IRM cérébrale au format JPG, JPEG ou PNG.
-2. Attendez quelques secondes pendant l’analyse.
-3. Consultez le résultat affiché par l’application.
+2. Ajustez le seuil de décision si nécessaire.
+3. Attendez quelques secondes pendant l’analyse.
+4. Consultez le résultat affiché par l’application.
+5. Activez **Grad-CAM** pour visualiser la zone d’intérêt du modèle.
 
 **Résultats possibles :**
 - **Image potentiellement compatible avec une tumeur**
@@ -302,9 +317,6 @@ def get_resnet_backbone(model):
     raise ValueError("Backbone ResNet50 introuvable dans le modèle.")
 
 def make_gradcam_heatmap(img_array, model, last_conv_layer_name="conv5_block3_out"):
-    """
-    img_array : image déjà prétraitée, shape (1, 224, 224, 3)
-    """
     base_model = get_resnet_backbone(model)
 
     last_conv_layer_model = tf.keras.Model(
@@ -438,7 +450,11 @@ if uploaded_file is not None:
             last_conv_layer_name="conv5_block3_out"
         )
 
-        heatmap_gray, gradcam_overlay = overlay_gradcam_on_image(display_img, heatmap, alpha=0.4)
+        heatmap_gray, gradcam_overlay = overlay_gradcam_on_image(
+            display_img,
+            heatmap,
+            alpha=0.4
+        )
 
         col_gc1, col_gc2 = st.columns(2)
 
