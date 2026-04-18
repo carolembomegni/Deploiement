@@ -10,8 +10,8 @@ from PIL import Image
 # =========================
 # CONFIG
 # =========================
-MODEL_PATH = "modelefinal.keras"
-MODEL_URL = "https://github.com/carolembomegni/Deploiement/releases/download/v1.0/modelefinal.keras?raw=1"
+MODEL_PATH = "modelefinal_clean.h5"
+MODEL_URL = "https://github.com/carolembomegni/Deploiement/releases/download/v1.1/modelefinal_clean.h5"
 IMG_SIZE = (224, 224)
 DEFAULT_THRESHOLD = 0.5
 
