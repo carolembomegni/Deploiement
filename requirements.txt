@@ -1,4 +1,6 @@
 streamlit
 tensorflow
-numpy
+numpy==1.26.4
 pillow
+gdown
+opencv-python-headless
