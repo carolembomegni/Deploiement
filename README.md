@@ -1,42 +1,25 @@
-# Brain Tumor Classification App
+# 🧠 Analyse d’IRM cérébrale – Détection de tumeur
 
-This project is a deep learning application that predicts the presence of a brain tumor from MRI images using a ResNet model.
+Application web développée avec **Streamlit** permettant d’analyser une image IRM cérébrale et de prédire la présence potentielle d’une tumeur à l’aide d’un modèle de Deep Learning basé sur **ResNet50**.
 
-## Project Description
+## 🎓 Projet académique
 
-The objective of this project is to build a robust binary classification model capable of distinguishing between:
-- Tumor
-- No Tumor
+Projet déployé par les étudiants du **Collège La Cité**.
 
-The model was trained on MRI images with preprocessing techniques and deployed using Streamlit.
+## 👥 Équipe projet
 
-## Model
+- FRANÇOIS XAVIER GOMSI TESSA
+- WILLY STANLIN TAGUEDONG
+- MBOMEGNI NANA CAROLE
+- LOIC MAMBOU NGANKEU
+- THIERRY PASCAL ZOKOU TCHOKONTHE
+- ANGELE BLANDINE FEUSSI NGUEMKAM  
 
-- Architecture: ResNet
-- Type: Binary classification
-- Input size: 224x224
-- Preprocessing:
-  - Image resizing
-  - Normalization (0–1)
-  - (Optional: CLAHE if applied)
-- Evaluation metrics:
-  - Accuracy
-  - Precision
-  - Recall
-  - Confusion Matrix
 
-## How to run the application
+##  Lien de l'application
 
-### 1. Install dependencies
 
-```bash
-pip install -r requirements.txt
 
-## Authors
-
-- Carole Mbomegni (GitHub: @tonusername)
-- Nom 2 (GitHub: @username2)
-- Nom 3
-- Nom 4
-- Nom 5
-- Nom 6
+```txt
+https://ton-app.streamlit.app
+ 
