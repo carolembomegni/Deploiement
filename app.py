@@ -168,6 +168,26 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
+with st.expander("📘 Guide d’utilisation"):
+    st.markdown("""
+###  Objectif
+Analyser une image IRM cérébrale pour détecter la présence potentielle d’une tumeur.
+
+###  Étapes
+1. Importer une image IRM  
+2. Attendre l’analyse automatique  
+3. Lire le résultat affiché  
+
+### Résultats
+- ⚠️ Compatible avec une tumeur → attention requise  
+- ✅ Pas de tumeur détectée → résultat rassurant  
+
+###  Paramètre
+Le seuil de décision permet d’ajuster la sensibilité du modèle.
+
+### Important
+Ce système est une aide à la décision et ne remplace pas un médecin.
+""")
 # =========================
 # SIDEBAR
 # =========================
@@ -308,7 +328,3 @@ st.markdown(
     '<div class="footer-note">Prototype académique — Application de classification binaire d’IRM cérébrale</div>',
     unsafe_allow_html=True
 )
-
-
-
-      
