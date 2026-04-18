@@ -234,13 +234,19 @@ download_model()
 # =========================
 @st.cache_resource
 def load_model():
+    custom_objects = {
+        "preprocess_input": tf.keras.applications.resnet50.preprocess_input,
+        "RandomFlip": tf.keras.layers.RandomFlip,
+        "RandomRotation": tf.keras.layers.RandomRotation,
+        "RandomZoom": tf.keras.layers.RandomZoom,
+        "Sequential": tf.keras.Sequential,
+    }
+
     return tf.keras.models.load_model(
         MODEL_PATH,
         compile=False,
         safe_mode=False,
-        custom_objects={
-            "preprocess_input": tf.keras.applications.resnet50.preprocess_input
-        }
+        custom_objects=custom_objects
     )
 
 model = load_model()
@@ -372,14 +378,3 @@ st.markdown(
     '<div class="footer-note">Application académique de classification binaire d’IRM cérébrale</div>',
     unsafe_allow_html=True
 )
-
- 
-  
-
-
-
-
-   
-    
-
- 
