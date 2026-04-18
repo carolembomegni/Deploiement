@@ -1,5 +1,5 @@
 import os
-import gdown
+import urllib.request
 import cv2
 import streamlit as st
 import tensorflow as tf
@@ -10,7 +10,7 @@ from PIL import Image
 # CONFIG
 # =========================
 MODEL_PATH = "modelefinal.keras"
-MODEL_URL = "https://drive.google.com/uc?id=1k6SXisbC2qErIYncGZ3J6a9viJZjnvAy"
+MODEL_URL = "https://github.com/carolembomegni/Deploiement/releases/download/v1.0/modelefinal.keras?raw=1"
 IMG_SIZE = (224, 224)
 DEFAULT_THRESHOLD = 0.5
 
@@ -221,9 +221,12 @@ with st.sidebar:
 # =========================
 # MODEL DOWNLOAD
 # =========================
-if not os.path.exists(MODEL_PATH):
-    with st.spinner("Téléchargement du modèle en cours..."):
-        gdown.download(MODEL_URL, MODEL_PATH, quiet=False, fuzzy=True)
+def download_model():
+    if not os.path.exists(MODEL_PATH):
+        with st.spinner("Téléchargement du modèle en cours..."):
+            urllib.request.urlretrieve(MODEL_URL, MODEL_PATH)
+
+download_model()
 
 # =========================
 # LOAD MODEL
@@ -362,5 +365,21 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+
+ 
+
+   
+
+  
+
+
+ 
+  
+
+
+
+
+   
+    
 
  
